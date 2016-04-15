@@ -1,69 +1,68 @@
 # coding=utf-8
 from __future__ import unicode_literals
-
 from django.db import models
-
 
 # Create your models here.
 
-class user(models.Model):
-    id = models.TextField(u'用户编号', primary_key=True)
-    pwd = models.TextField(u'密码')
-    authority = models.IntegerField(u'权限')
-    name = models.TextField(u'姓名')
-    sex = models.IntegerField(u'性别')
+class User(models.Model):
+    id = models.TextField(u'*用户编号', primary_key=True)
+    pwd = models.TextField(u'*密码')
+    authority = models.IntegerField(u'*权限')
+    name = models.TextField(u'*姓名')
+    sex = models.IntegerField(u'*性别')
     major = models.TextField(u'专业', null=True, blank=True)
     source = models.TextField(u'生源地', null=True, blank=True)
     apartment = models.TextField(u'学院', null=True, blank=True)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.id)
 
 
-class building(models.Model):
-    id = models.AutoField(u'编号', primary_key=True)
-    name = models.TextField(u'名称')
+class Building(models.Model):
+    id = models.AutoField(u'*编号', primary_key=True)
+    name = models.TextField(u'*名称')
     remark = models.TextField(u'备注', null=True, blank=True)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.id)
 
 
-class dormitory(models.Model):
-    dor_id = models.IntegerField(u'宿舍编号', primary_key=True)
-    buil_id = models.IntegerField(u'建筑编号')
-    buil_id = models.ForeignKey(building, on_delete=models.CASCADE)
-    name = models.IntegerField(u'宿舍名')
-    capacity = models.IntegerField(u'容量')
-    count = models.IntegerField(u'已用空间')
-    state = models.IntegerField(u'可用状态')
-
-    def __unicode__(self):
-        return self.name
-
-
-class dor_arr(models.Model):
-    uesr_id = models.ForeignKey(user)
-    dor_id = models.ForeignKey(dormitory)
+class Dormitory(models.Model):
+    dor_id = models.AutoField(u'*宿舍编号', primary_key=True)
+    buil_id = models.ForeignKey(Building, on_delete=models.CASCADE)
+    name = models.IntegerField(u'*宿舍名')
+    capacity = models.IntegerField(u'*容量')
+    count = models.IntegerField(u'*已用空间')
+    state = models.IntegerField(u'*可用状态')
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.dor_id)
 
 
-class question(models.Model):
-    id = models.IntegerField(u'问题编号', primary_key=True)
-    content = models.TextField(u'内容')
-    option = models.TextField(u'选项')
+class DorArrange(models.Model):
+    user_id = models.ForeignKey(User, null=True, blank=True)
+    dor_id = models.ForeignKey(Dormitory, null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.user_id)
+
+
+class Question(models.Model):
+    id = models.AutoField(u'*问题编号', primary_key=True)
+    content = models.TextField(u'*内容')
+    option = models.TextField(u'*选项')
     remark = models.TextField(u'备注', null=True, blank=True)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.id)
 
 
-class user_answer(models.Model):
-    user_id = models.ForeignKey(user, primary_key=True)
-    que_id = models.ForeignKey(question, primary_key=True)
-    answer = models.TextField(u'答案')
+class User_answer(models.Model):
+    user_id = models.ForeignKey(User)
+    que_id = models.ForeignKey(Question)
+    answer = models.TextField(u'*答案')
+    class Meta:
+        unique_together = ('user_id', 'que_id')
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.user_id)
