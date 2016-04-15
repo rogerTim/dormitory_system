@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import user, dor_arr, dormitory, building, user_answer, question
+from .models import User, DorArrange, Dormitory, Building, User_answer, Question
 
 # Register your models here.
 
-admin.site.register(dormitory)
-admin.site.register(building)
-admin.site.register(user_answer)
-admin.site.register(user)
-admin.site.register(dor_arr)
-admin.site.register(question)
+admin.site.register(Dormitory)
+admin.site.register(Building)
+admin.site.register(User_answer)
+admin.site.register(User)
+admin.site.register(DorArrange)
+admin.site.register(Question)
