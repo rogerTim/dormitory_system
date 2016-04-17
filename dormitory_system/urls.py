@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from dormitory import views
 
 urlpatterns = [
+    url(r'^student_login/', views.student_login, name='student_login'),
+    url(r'^get_question/', views.get_question, name='get_question'),
+    url(r'^save_answer/', views.save_answer, name='save_answer'),
+    url(r'^get_result/', views.get_result, name='get_result'),
+    url(r'^admin_login/', views.admin_login, name='admin_login'),
+    url(r'^percentage/', views.percentage, name='percentage'),
+    url(r'^output_all/', views.output_all, name='output_all'),
     url(r'^admin/', admin.site.urls),
 ]
