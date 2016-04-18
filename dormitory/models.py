@@ -30,7 +30,7 @@ class Building(models.Model):
 class Dormitory(models.Model):
     dor_id = models.AutoField(u'*宿舍编号', primary_key=True)
     buil_id = models.ForeignKey(Building, on_delete=models.CASCADE)
-    name = models.TextField(u'*宿舍名')
+    name = models.IntegerField(u'*宿舍名')
     capacity = models.IntegerField(u'*容量')
     count = models.IntegerField(u'*已用空间')
     state = models.IntegerField(u'*可用状态')
