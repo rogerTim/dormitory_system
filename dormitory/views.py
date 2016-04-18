@@ -19,9 +19,9 @@ def student_login(request):
     schId = request.POST.get('schId')
     pwd = request.POST.get('pwd')
     try:
-        if pwd == User.objects.get(schId=schId).pwd:
-            name = User.objects.get(schId=schId).name
-            return JsonResponse({'status': 1, 'username':name})
+        if pwd == User.objects.get(id=schId).pwd:
+            name = User.objects.get(id=schId).name
+            return JsonResponse({'status': 1, 'username': name})
         else:
             return JsonResponse({'status': 0})
     except:
