@@ -2,9 +2,34 @@
 from django.shortcuts import render
 from dormitory.models import User_answer, DorArrange, Dormitory, User, Question
 from django.http import HttpResponse, JsonResponse
+import json
+from datetime import datetime
 # Create your views here.
 
 
+def json_response(func):
+    """
+    A decorator thats takes a view response and turns it
+    into json. If a callback is added through GET or POST
+    the response is JSONP.
+    """
+    def decorator(request, *args, **kwargs):
+        objects = func(request, *args, **kwargs)
+        if isinstance(objects, HttpResponse):
+            return objects
+        try:
+            data = json.dumps(objects, default=json_serial)
+            if 'callback' in request.REQUEST:
+                # a jsonp response!
+                data = '%s(%s);' % (request.REQUEST['callback'], data)
+                return HttpResponse(data, "text/javascript")
+        except:
+            data = json.dumps(str(objects))
+        return HttpResponse(data, "application/json")
+    return decorator
+
+
+@json_response
 def student_login(request):
     """ 学生登录接口
         方式:
@@ -21,11 +46,14 @@ def student_login(request):
     try:
         if pwd == User.objects.get(id=schId).pwd:
             name = User.objects.get(id=schId).name
-            return JsonResponse({'status': 1, 'username': name})
+            # return JsonResponse({'status': 1, 'username': name})
+            return {'status': 1, 'username': name}
         else:
-            return JsonResponse({'status': 0})
+            return {'status': 0}
+            # return JsonResponse({'status': 0})
     except:
-        return JsonResponse({'status': 0})
+        return {'status': 0}
+        # return JsonResponse({'status': 0})
 
 
 def get_question(request):
@@ -200,3 +228,10 @@ def output_all(request):
         data.append(room)
     return JsonResponse({'data': data})
 
+
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, datetime):
+        serial = obj.isoformat()
+        return serial[:10]
